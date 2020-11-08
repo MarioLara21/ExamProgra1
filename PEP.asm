@@ -9,3 +9,10 @@
 ;  Y si desea solo ejecutarlo:              ;
 ;          PEP                              ;
 ;-------------------------------------------;
+Datos Segment
+ 
+Datos EndS
+
+Code Segment
+    Assume Cs:Code Ds:Datos
+    
