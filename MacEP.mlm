@@ -1,51 +1,47 @@
 PushAll Macro 
-       push      ax		;Guarda los todos los registro en... 
-       push      bx		;...la pila del programa.
-       push      cx		;Preparaci�n para rutinas
-       push      dx		;Debe tener cuidado de llamar a la...
-       push      si		;...siguiente macro (PopAllRegs) para...
-       push      di		;poner equilibrar la pila...
-       pushf			;Guarda el registro de banderas en la pila.
-EndM				;Su contra parte es la macro siguiente. 
+       push      ax		                     ;Guarda los todos los registro en... 
+       push      bx		                     ;...la pila del programa.
+       push      cx		                     ;Preparaci�n para rutinas
+       push      dx		                     ;Debe tener cuidado de llamar a la...
+       push      si		                     ;...siguiente macro (PopAllRegs) para...
+       push      di		                     ;poner equilibrar la pila...
+       pushf			                     ;Guarda el registro de banderas en la pila.
+EndM				                     ;Su contra parte es la macro siguiente. 
 
 PopAll Macro
-       popf		        ;...la pila del programa.
-       pop       di		;...llamado antes a pushallregs.
-       pop       si		; Sino se produce un error en el programa.
+       popf		                            ;...la pila del programa.
+       pop       di		                     ;...llamado antes a pushallregs.
+       pop       si		                     ; Sino se produce un error en el programa.
        pop       dx
        pop       cx
        pop       bx
        pop       ax
 EndM
-;-------------------------------;
-;     Definici�n de Macros	;
-;(afuera del segmento de c�digo);
-;-------------------------------;
 
 PushA Macro 
-       push      ax		;Guarda los todos los registro en... 
-       push      bx		;...la pila del programa.
-       push      cx		;Preparaci�n para rutinas
-       push      dx		;Debe tener cuidado de llamar a la...
-       push      si		;...siguiente macro (PopAllRegs) para...
-       push      di		;poner equilibrar la pila...
-       push      bp		;...sino lo hace el programa se cae...
-       push      sp		;...y da un error.
-       push      ds		;Note que el �ltimo elemento del pushallregs...
-       push      es		;...es el primer elemento en salir en popallregs.
+       push      ax		                     ;Guarda los todos los registro en... 
+       push      bx		                     ;...la pila del programa.
+       push      cx		                     ;Preparaci�n para rutinas
+       push      dx		                     ;Debe tener cuidado de llamar a la...
+       push      si		                     ;...siguiente macro (PopAllRegs) para...
+       push      di		                     ;poner equilibrar la pila...
+       push      bp		                     ;...sino lo hace el programa se cae...
+       push      sp		                     ;...y da un error.
+       push      ds		                     ;Note que el �ltimo elemento del pushallregs...
+       push      es		                     ;...es el primer elemento en salir en popallregs.
        push      ss
-       pushf			;Guarda el registro de banderas en la pila.
-EndM				;Su contra parte es la macro siguiente. 
+       pushf			                     ;Guarda el registro de banderas en la pila.
+EndM				                     ;Su contra parte es la macro siguiente. 
 
 PopA Macro
-       popf		        ;...la pila del programa.
-       pop       ss	        ;Esto se hace despu�s de la llamada a una rutina
-       pop       es	        ;Debe tener cuidado de llamar a esta...
-       pop       ds	        ;...macro (PopAllRegs) para...
-       pop       sp	        ;poner equilibrar la pila...
-       pop       bp		;...solamente despu�s de haber...
-       pop       di		;...llamado antes a pushallregs.
-       pop       si		; Sino se produce un error en el programa.
+       popf		                            ;...la pila del programa.
+       pop       ss	                            ;Esto se hace despu�s de la llamada a una rutina
+       pop       es	                            ;Debe tener cuidado de llamar a esta...
+       pop       ds	                            ;...macro (PopAllRegs) para...
+       pop       sp	                            ;poner equilibrar la pila...
+       pop       bp		                     ;...solamente despu�s de haber...
+       pop       di		                     ;...llamado antes a pushallregs.
+       pop       si		                     ; Sino se produce un error en el programa.
        pop       dx
        pop       cx
        pop       bx
@@ -54,33 +50,33 @@ EndM
    
 ClearScreen Macro TextColor
        PushA
-       mov       ah,07		;Prepara servicio 07 para la int 10h. (desplazamiento de ventana hacia abajo).
-       mov       al,25		;N�mero de l�neas por desplazar en este caso total de filas 25.
-       mov       bh,TextColor	;Atributo con que se va a desplazar; es decir; color. 00 = negro.
-       mov       ch,00		;En donde comienza: fila de la esquina superior izquierda.
-       mov       cl,00		;En donde comienza: columna de la esquina superior izquierda.
-       mov       dh,25		;En donde termina:  fila de la esquina inferior derecha.
-       mov       dl,80		;En donde termina:  columna de la esquina inferior derecha.
-       int       10h		;ejecute la int 10h/ servicio 07h, desplaze la ventana hacia abajo.
+       mov       ah,07		              ;Prepara servicio 07 para la int 10h. (desplazamiento de ventana hacia abajo).
+       mov       al,25		              ;N�mero de l�neas por desplazar en este caso total de filas 25.
+       mov       bh,TextColor	              ;Atributo con que se va a desplazar; es decir; color. 00 = negro.
+       mov       ch,00		              ;En donde comienza: fila de la esquina superior izquierda.
+       mov       cl,00		              ;En donde comienza: columna de la esquina superior izquierda.
+       mov       dh,25		              ;En donde termina:  fila de la esquina inferior derecha.
+       mov       dl,80		              ;En donde termina:  columna de la esquina inferior derecha.
+       int       10h		                     ;ejecute la int 10h/ servicio 07h, desplaze la ventana hacia abajo.
        PopA
 EndM
 
 PrintfS Macro String
-       lea       dx,String      ;Coloca la direcci�n del desplazamiento de la etiqueta DS:Message 
-       mov       ah,09          ;par�metro 09 del servicio de int 21 (imprimir en pantalla cadena terminada en $)
-       int       21h            ;ejecute la interrupci�n, e imprima en pantalla.
+       lea       dx,String                       ;Coloca la direcci�n del desplazamiento de la etiqueta DS:Message 
+       mov       ah,09                           ;par�metro 09 del servicio de int 21 (imprimir en pantalla cadena terminada en $)
+       int       21h                             ;ejecute la interrupci�n, e imprima en pantalla.
 EndM
 
 PrintfC Macro Caracter, Atributo
-       PushA     	        ;Guarde todos los registros.
-       mov       ah,09          ;Servicio de int 21h / 02 imprimir un caracter en pantalla.
-       mov       dl,Caracter    ;Caracter Ascii a imprimir.
+       PushA     	                            ;Guarde todos los registros.
+       mov       ah,09                           ;Servicio de int 21h / 02 imprimir un caracter en pantalla.
+       mov       dl,Caracter                     ;Caracter Ascii a imprimir.
        mov       bh,00
        mov       bl,Atributo
        and       bl,00001111b
        mov	 cx,1
-       int       10h            ;ejecute la interrupci�n, e imprima en pantalla.
-       PopA     	    	;Saque todos los registros.
+       int       10h                             ;ejecute la interrupci�n, e imprima en pantalla.
+       PopA     	    	                     ;Saque todos los registros.
 EndM
 
 GotoXY Macro X,Y
@@ -118,57 +114,57 @@ PrintHex Macro Numero
 EndM
 
 ListPush  Macro lista
-	IRP i,<lista>          							; I recorre toda la lista ingresada
-		Push i 										; Mete a i en la pila
+	IRP i,<lista>          			; I recorre toda la lista ingresada
+		Push i 				; Mete a i en la pila
 	EndM
 EndM
 
 ListPop	 Macro lista
-	IRP i,<lista> 									; I recorre toda la lista ingresada
-		Pop i 										; Saca a i en la pila
+	IRP i,<lista> 				; I recorre toda la lista ingresada
+		Pop i 					; Saca a i en la pila
 	EndM
 EndM
 
 PushA Macro
-	ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp,ds,es,ss> 	;Mete los registros a la pila
-	pushf 											;  Mete las banderas a la pila
+	ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp,ds,es,ss> ;Mete los registros a la pila
+	pushf 						;  Mete las banderas a la pila
 EndM
 
 IniciarSegDatos Macro datos
 	;ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp>
-	xor		ax,ax 									; Limpia ax
-	mov		ax,datos 								; Apunta el segmento de datos
-	mov		ds,ax 									; Pasa el ax al ds
+	xor		ax,ax 				; Limpia ax
+	mov		ax,datos 			; Apunta el segmento de datos
+	mov		ds,ax 				; Pasa el ax al ds
 	;ListaPop <sp,bp,di,si,dx,cx,bx,ax>
 EndM
 
 RetornaControl Macro
 	mov 	ax,4c00h								
-	int 	21h 									; ejecuta la interrupción
+	int 	21h 					; ejecuta la interrupción
 EndM
 
 ImpString Macro Mensaje                        
-       mov ah, 09h                                	;Carga los datos para la interrupción 
-       mov dx, offset mensaje                       ;Lee todo mensaje
-       int 21h                                     	;Interrupción que imprime
+       mov ah, 09h                               ;Carga los datos para la interrupción 
+       mov dx, offset mensaje                    ;Lee todo mensaje
+       int 21h                                   ;Interrupción que imprime
 EndM
-buscarNombre Macro 							;Va sacando del ES caracter a caracter el nombre del archivo
+buscarNombre Macro 					;Va sacando del ES caracter a caracter el nombre del archivo
     add di,3d                     
     ciclo:
      	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al AL
-     	cmp 	al,0dh 						;Si el caracter es igual a 0dh siginfica que llegó al fin del nombre
-     	jz 		print						;y sale del ciclo
-	mov 	byte ptr nombreArch[di],al  ;Si no es, sigue el curso agregrando el caracter en Al a la variable de nombre
-     	inc 	di 							;Incrementa la posicion donde guardar el caracter en el varible
-     	inc 	si 							;Incrementa el si para sacar el valor de ES del siguiente caracter
+     	cmp 	al,0dh 				;Si el caracter es igual a 0dh siginfica que llegó al fin del nombre
+     	jz 		print				;y sale del ciclo
+	mov 	byte ptr nombreArch[di],al         ;Si no es, sigue el curso agregrando el caracter en Al a la variable de nombre
+     	inc 	di 					;Incrementa la posicion donde guardar el caracter en el varible
+     	inc 	si 					;Incrementa el si para sacar el valor de ES del siguiente caracter
      	jmp		ciclo 						
     print:
     	push  	di       
         IniciaSegDatos data
 EndM
 
-cargarNombre Macro  						;Verifica que el argumento no esté vacío ante de llamar a buscar
-  		 inc si                             ;el nombre  
+cargarNombre Macro  					;Verifica que el argumento no esté vacío ante de llamar a buscar
+  		 inc si                            ;el nombre  
     	 mov si,82h
     	 mov al, byte ptr es:[si] 
     	 cmp al,0h 
@@ -180,13 +176,13 @@ cargarNombre Macro  						;Verifica que el argumento no esté vacío ante de lla
 	hay:
     	 buscarNombre
 EndM
-CerrarArchivo Macro 						;Cierre de un archivo
+CerrarArchivo Macro 					;Cierre de un archivo
 	mov		bx,handle
 	mov		ah,3eh 
 	int 	21h
 EndM
-LeerArchivo Macro num , destino							;Lee e imprime la información adentro del archivo de 
-	mov 	ah,3fh 							;ayuda la programa
+LeerArchivo Macro num , destino			;Lee e imprime la información adentro del archivo de 
+	mov 	ah,3fh 				;ayuda la programa
 	mov 	bx,handle
 	mov 	cx,num
 
@@ -194,22 +190,22 @@ LeerArchivo Macro num , destino							;Lee e imprime la información adentro del
 	int 	21h
 	xor 	ax,ax
 	mov 	ah,09h
-	mov 	bl,09h 							;Imprime la información con el atributo 09h que es 
-	xor 	bh,bh 							;el color azul
+	mov 	bl,09h 				;Imprime la información con el atributo 09h que es 
+	xor 	bh,bh 					;el color azul
 	mov 	cx,200h
 	int 	10h
 	int 	21h
 EndM
 AbrirArch Macro arch
-	local ErrorAbrir,SalirAbrir							;Abre el archivo que tiene la información de ayuda			
- 	mov 	ah,3Dh							;del programa al digitar /?
+	local ErrorAbrir,SalirAbrir			;Abre el archivo que tiene la información de ayuda			
+ 	mov 	ah,3Dh					;del programa al digitar /?
 	mov 	al,02h	
 	mov 	dx,offset arch			
 	int 	21h
 	mov 	handle,ax
-	cmp 	ax,2h 							;Si el ax contiene un 2 significa que el archivo no se
-	jz 		ErrorAbrir 						;encuentra en el BIN y salta a error
-	jmp 	short salirAbrir 				;Si el programa se encuentra se sigue la ejecución normal
+	cmp 	ax,2h 					;Si el ax contiene un 2 significa que el archivo no se
+	jz 		ErrorAbrir 			;encuentra en el BIN y salta a error
+	jmp 	short salirAbrir 			;Si el programa se encuentra se sigue la ejecución normal
 	ErrorAbrir:
 		ImprimeString msmErrorAbrir,0ch 	;Imprime string con la información del error 
 		CerrarDOS 							;y sale del programa
