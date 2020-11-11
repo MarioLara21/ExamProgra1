@@ -152,3 +152,64 @@ ImpString Macro Mensaje
        mov dx, offset mensaje                       ;Lee todo mensaje
        int 21h                                     	;Interrupción que imprime
 EndM
+buscarNombre Macro 							;Va sacando del ES caracter a caracter el nombre del archivo
+    add di,3d                     
+    ciclo:
+     	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al AL
+     	cmp 	al,0dh 						;Si el caracter es igual a 0dh siginfica que llegó al fin del nombre
+     	jz 		print						;y sale del ciclo
+	mov 	byte ptr nombreArch[di],al  ;Si no es, sigue el curso agregrando el caracter en Al a la variable de nombre
+     	inc 	di 							;Incrementa la posicion donde guardar el caracter en el varible
+     	inc 	si 							;Incrementa el si para sacar el valor de ES del siguiente caracter
+     	jmp		ciclo 						
+    print:
+    	push  	di       
+        IniciaSegDatos data
+EndM
+
+cargarNombre Macro  						;Verifica que el argumento no esté vacío ante de llamar a buscar
+  		 inc si                             ;el nombre  
+    	 mov si,82h
+    	 mov al, byte ptr es:[si] 
+    	 cmp al,0h 
+		 jz cerrar
+		 jmp hay
+	cerrar: 
+			desplegarAyuda
+			cerrarDos
+	hay:
+    	 buscarNombre
+EndM
+CerrarArchivo Macro 						;Cierre de un archivo
+	mov		bx,handle
+	mov		ah,3eh 
+	int 	21h
+EndM
+LeerArchivo Macro num , destino							;Lee e imprime la información adentro del archivo de 
+	mov 	ah,3fh 							;ayuda la programa
+	mov 	bx,handle
+	mov 	cx,num
+
+	mov 	dx,offset destino				
+	int 	21h
+	xor 	ax,ax
+	mov 	ah,09h
+	mov 	bl,09h 							;Imprime la información con el atributo 09h que es 
+	xor 	bh,bh 							;el color azul
+	mov 	cx,200h
+	int 	10h
+	int 	21h
+EndM
+AbrirArch Macro arch
+	local ErrorAbrir,SalirAbrir							;Abre el archivo que tiene la información de ayuda			
+ 	mov 	ah,3Dh							;del programa al digitar /?
+	mov 	al,02h	
+	mov 	dx,offset arch			
+	int 	21h
+	mov 	handle,ax
+	cmp 	ax,2h 							;Si el ax contiene un 2 significa que el archivo no se
+	jz 		ErrorAbrir 						;encuentra en el BIN y salta a error
+	jmp 	short salirAbrir 				;Si el programa se encuentra se sigue la ejecución normal
+	ErrorAbrir:
+		ImprimeString msmErrorAbrir,0ch 	;Imprime string con la información del error 
+		CerrarDOS 							;y sale del programa
