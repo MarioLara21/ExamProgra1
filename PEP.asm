@@ -9,10 +9,14 @@
 ;  Y si desea solo ejecutarlo:              ;
 ;          PEP                              ;
 ;-------------------------------------------;
+include MacEp.mlm
 Datos Segment
- 
+nombreArch  db  '        .bmp'      ;Variable donde voy a guardarel nombre del archivo
+handle      dw  ?                   ;Variable donde guardo la dirección en memoria del archivo
+
 Datos EndS
 
 Code Segment
     Assume Cs:Code Ds:Datos
+    IniciarSegDatos
     
