@@ -74,7 +74,7 @@ PrintfC Macro Caracter, Atributo
        mov       bh,00
        mov       bl,Atributo
        and       bl,00001111b
-       mov	 cx,1
+       mov	   cx,1
        int       10h                             ;ejecute la interrupci�n, e imprima en pantalla.
        PopA     	    	                     ;Saque todos los registros.
 EndM
@@ -108,7 +108,7 @@ PrintHex Macro Numero
        add       al,48
        PrintfC   al,Numero
        jmp short exit 
-  hex: add       al,55  
+   hex: add       al,55  
        PrintfC   al,Numero
  exit: PopA
 EndM
@@ -148,7 +148,7 @@ ImpString Macro Mensaje
        mov dx, offset mensaje                    ;Lee todo mensaje
        int 21h                                   ;Interrupción que imprime
 EndM
-buscarNombre Macro 					;Va sacando del ES caracter a caracter el nombre del archivo
+EncontarNombre Macro 					;Va sacando del ES caracter a caracter el nombre del archivo
     add di,3d                     
     ciclo:
      	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al AL
@@ -157,7 +157,7 @@ buscarNombre Macro 					;Va sacando del ES caracter a caracter el nombre del arc
 	mov 	byte ptr nombreArch[di],al         ;Si no es, sigue el curso agregrando el caracter en Al a la variable de nombre
      	inc 	di 					;Incrementa la posicion donde guardar el caracter en el varible
      	inc 	si 					;Incrementa el si para sacar el valor de ES del siguiente caracter
-     	jmp		ciclo 						
+     	jmp    ciclo 						
     print:
     	push  	di       
         IniciaSegDatos data
@@ -210,9 +210,9 @@ AbrirArch Macro arch
 		ImprimeString msmErrorAbrir,0ch 	;Imprime string con la información del error 
 		CerrarDOS 							;y sale del programa
 
-loadbmp	proc	near  ;this procedure is for loading in the bitmap
-   mov ah,4fh ; set mode to SVGA (101h i.e 640X480 in 256 colours
-   mov al,02h
+CargarBMP	proc	near  
+   mov ah,4fh 
+   mov al,10h
    mov bx,101h
    int 10h
 
@@ -374,7 +374,7 @@ bypass:
 	mov ax,buff
 	mov di,ax
 	mov al,[si]
-	stosb  ; writing pixel ends
+	stosb  ; Es igual a ES:DI,[AL]
 	inc si
 	ret
 	endp

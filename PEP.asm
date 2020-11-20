@@ -9,8 +9,9 @@
 ;  Y si desea solo ejecutarlo:              ;
 ;          PEP                              ;
 ;-------------------------------------------;
-include MacEp.mlm
-Datos Segment
+include macep.mlm
+datos SEGMENT
+error       db  'Error'
 nombreArch  db  '\c:              '      ;Variable donde voy a guardarel nombre del archivo
 nombreAssci db  '\c:          .txt'
 handle      dw  ?                        ;Variable donde guardo la dirección en memoria del archivo
@@ -18,13 +19,13 @@ ancho       dw  0h
 largo       dw  0h
 largoBk     dw  0h
 anchoBk     dw  0h
-Datos EndS
-
-Code Segment
-    Assume Cs:Code Ds:Datos
-    incio:
-    IniciarSegDatos
-
-    
-Code EndS
+datos ENDS
+codigo SEGMENT
+ASSUME CS:codigo,ds:datos
+inicio :
+        IniciarSegDatos
+        
+fin:
+        RetornaControl
+codigo ENDS
 END inicio
