@@ -52,25 +52,14 @@ datos SEGMENT
        biclrused   dw   2 dup(?)
        biclrimp    dw   2 dup(?)
     BMPKBEZA   ends
-    ColoresBmp   struc            ; This is how the bitmap stores its colours
+    ColoresBmp   struc           
      blue        db   ?
      green       db   ?
      red         db   ?
      fill        db   ?
     ColoresBmp   ends
 
-     filename db 'test.bmp',0
-
-     filehandle dw ?
-     
-     Header db 54 dup (0)
-     
-     Palette db 256*4 dup (0)
-     
-     ScrLine db 320 dup (0)
-
-     ErrorMsg db 'Error', 13, 10,'$'
-params BMPKBEZA <> ; assigning the structures to these values
+params BMPKBEZA <>
 param  ColoresBmp <>
 datos ENDS
 include macep.mlm
