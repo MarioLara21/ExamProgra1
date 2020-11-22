@@ -10,20 +10,58 @@
 ;          PEP                              ;
 ;-------------------------------------------;
 datos SEGMENT
-    error       db  'Error'
-    nombreArch  db  '\c:              '      ;Variable donde voy a guardarel nombre del archivo
-    nombreAssci db  '\c:          .txt'
-    handle      dw  ?                        ;Variable donde guardo la dirección en memoria del archivo
-    ancho       dw  0h
-    largo       dw  0h
-    largoBk     dw  0h
-    anchoBk     dw  0h
+    error           db  'Error$'
+    nombArch        db  '\c:              '      ;Variable donde voy a guardar el nombre del archivo
+    nombreAssci     db  '\c:          .txt'      ;Variable donde guardo el nombre del txt
+    mostrarAyuda    db  'C:\TASM\BIN\ayuda.txt' 
+    handle          dw   ?                         ; handle lo uso para guardar la dirección del archivo
+    X               dw   ?                         ; X and Z is used to fill the screen with pixels
+    Z               dw   ?
+    col             db   640 dup(?)                ; col lo uso para hacer una linea en pantalla
+    buff            dw   0
+                    dw   0
+                    dw   0
+                    dw   0
+    multi           dw   6
+                    dw   4
+                    dw   0
+                    dw   0
+    num             dw   0
+    y               dw   409         ; y es para saber el final del bmp
+                    dw   408
+                    dw   307
+                    dw   306
+                    dw   204
+                    dw   203
+                    dw   102
+                    dw   101
+    BMPKBEZA    struc           ; Estructura que guarda datos del bmp
+       id          db   2 dup(?)
+       filesize    dw   2 dup(?)
+       reserved    dw   2 dup(?)
+       headersize  dw   2 dup(?)
+       infosize    dw   2 dup(?)
+       width       dw   2 dup(?)
+       depth       dw   2 dup(?)
+       biplanes    dw   ?
+       bits        dw   ?
+       bicomp      dw   2 dup(?)
+       bisizeim    dw   2 dup(?)
+       bixpels     dw   2 dup(?)
+       biypels     dw   2 dup(?)
+       biclrused   dw   2 dup(?)
+       biclrimp    dw   2 dup(?)
+    BMPKBEZA   ends
 datos ENDS
 include macep.mlm
 codigo SEGMENT
 ASSUME CS:codigo,ds:datos
 inicio :
-       
+         IniciarSegDatos datos
+         EncontrarNombre 
+         mov	ah,00h   ; Cambia del modo texto al gráfico
+         mov	al,10h
+         int	10h      ; Interrupción que lo hace
 fin:
          RetornaControl
 codigo ENDS

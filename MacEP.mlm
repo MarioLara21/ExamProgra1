@@ -131,11 +131,8 @@ PushA Macro
 EndM
 
 IniciarSegDatos Macro datos
-	ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp>
-	xor		ax,ax 				; Limpia ax
-	mov		ax,datos 			; Apunta el segmento de datos
-	mov		ds,ax 				; Pasa el ax al ds
-	ListaPop <sp,bp,di,si,dx,cx,bx,ax>
+	mov     ax,datos                                 ; Pasa el segmento dado al ax
+       mov     ds,ax                                    ; Pasa el segmento dado desde el ax al ds
 EndM
 
 RetornaControl Macro
@@ -148,19 +145,19 @@ ImpString Macro Mensaje
        mov dx, offset mensaje                    ;Lee todo mensaje
        int 21h                                   ;Interrupción que imprime
 EndM
-EncontarNombre Macro 					;Va sacando del ES caracter a caracter el nombre del archivo
+EncontrarNombre Macro 				;Va sacando del ES caracter a caracter el nombre del archivo
     add di,3d                     
     ciclo:
-     	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al AL
-     	cmp 	al,0dh 				;Si el caracter es igual a 0dh siginfica que llegó al fin del nombre
-     	jz 		print				;y sale del ciclo
-	mov 	byte ptr nombreArch[di],al         ;Si no es, sigue el curso agregrando el caracter en Al a la variable de nombre
-     	inc 	di 					;Incrementa la posicion donde guardar el caracter en el varible
-     	inc 	si 					;Incrementa el si para sacar el valor de ES del siguiente caracter
+     	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al al
+     	cmp 	al,0dh 				;Si es igual a cero es que llegó al final
+     	jz 	print				       ;Va a la etiqueta del final
+	mov 	byte ptr nombArch[di],al           ;Si no va a la etiqueta sigue con el ciclo agregando el caracter siguiente
+     	inc 	di 					;Incrementa la posición de donde guarda la variable
+     	inc 	si 					;Incremente el si para poder sacar el siguiente caracter
      	jmp    ciclo 						
     print:
-    	push  	di       
-        IniciaSegDatos data
+    	 push di      
+        IniciarSegDatos datos
 EndM
 
 cargarNombre Macro  					;Verifica que el argumento no esté vacío ante de llamar a buscar
@@ -171,8 +168,8 @@ cargarNombre Macro  					;Verifica que el argumento no esté vacío ante de llam
 		 jz cerrar
 		 jmp hay
 	cerrar: 
-			desplegarAyuda
-			cerrarDos
+		 mostrarAyuda
+		 cerrarDos
 	hay:
     	 buscarNombre
 EndM
@@ -225,7 +222,7 @@ CargarBMP macro
    
    mov	ah,3dh   ; file open
    mov	al,00
-   mov	dx,offset filename
+   mov	dx,offset nombArch
    int	21h       ; file open end
 
    mov	handle,ax
@@ -284,9 +281,6 @@ A2:
    mov	ah,3eh
    mov	bx,handle
    int	21h
-   ret
-loadbmp	endp
-end start
 endM
 
 putpixel macro  ; this procedure is for putting a single pixel any
