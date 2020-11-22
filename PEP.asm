@@ -11,7 +11,7 @@
 ;-------------------------------------------;
 datos SEGMENT
     error           db  'Error$'
-    nombArch        db  '\c:              '      ;Variable donde voy a guardar el nombre del archivo
+    nombArch        db  '\c:            ',0      ;Variable donde voy a guardar el nombre del archivo
     nombreAssci     db  '\c:          .txt'      ;Variable donde guardo el nombre del txt
     mostrarAyuda    db  'C:\TASM\BIN\ayuda.txt' 
     handle          dw   ?                         ; handle lo uso para guardar la dirección del archivo

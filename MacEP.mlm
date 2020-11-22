@@ -161,7 +161,7 @@ EncontrarNombre Macro 				;Va sacando del ES caracter a caracter el nombre del a
 EndM
 
 cargarNombre Macro  					;Verifica que el argumento no esté vacío ante de llamar a buscar
-  		 inc si                            ;el nombre  
+  	 inc si                                   ;el nombre  
     	 mov si,82h
     	 mov al, byte ptr es:[si] 
     	 cmp al,0h 
@@ -270,8 +270,8 @@ A2:;54
    cmp	Z,-1
    jne	A1B
    mov	ah,3eh
-   mov	bx,offset handle
-   xor 
+   mov	bx, handle
+   int 21h 
 A1B:;66
    jmp A1
 A2B:
@@ -286,7 +286,7 @@ ponerPixel macro
    mov	buff,ax
    mov	buff+2,dx
    mov	ax,Z   
-   mul 	multi+2
+   mul multi+2
    mov	buff+4,ax
    mov	ax,10
    mul	buff+4
