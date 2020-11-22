@@ -131,11 +131,11 @@ PushA Macro
 EndM
 
 IniciarSegDatos Macro datos
-	;ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp>
+	ListPush <Ax,Bx,Cx,Dx,Si,Di,Bp,Sp>
 	xor		ax,ax 				; Limpia ax
 	mov		ax,datos 			; Apunta el segmento de datos
 	mov		ds,ax 				; Pasa el ax al ds
-	;ListaPop <sp,bp,di,si,dx,cx,bx,ax>
+	ListaPop <sp,bp,di,si,dx,cx,bx,ax>
 EndM
 
 RetornaControl Macro
@@ -209,8 +209,8 @@ AbrirArch Macro arch
 	ErrorAbrir:
 		ImprimeString msmErrorAbrir,0ch 	;Imprime string con la información del error 
 		CerrarDOS 							;y sale del programa
-
-CargarBMP	proc	near  
+endM
+CargarBMP macro
    mov ah,4fh 
    mov al,10h
    mov bx,101h
@@ -287,8 +287,9 @@ A2:
    ret
 loadbmp	endp
 end start
+endM
 
-putpixel	proc	near  ; this procedure is for putting a single pixel any
+putpixel macro  ; this procedure is for putting a single pixel any
 							; where on the display plane
 ; The linear address of the display plane is=y*640+x
    mov	ax,Z ; calculating linear=y*640 in 16-bit
@@ -376,5 +377,4 @@ bypass:
 	mov al,[si]
 	stosb  ; Es igual a ES:DI,[AL]
 	inc si
-	ret
-	endp
+endM
