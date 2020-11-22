@@ -59,6 +59,17 @@ datos SEGMENT
      fill        db   ?
     ColoresBmp   ends
 
+     filename db 'test.bmp',0
+
+     filehandle dw ?
+     
+     Header db 54 dup (0)
+     
+     Palette db 256*4 dup (0)
+     
+     ScrLine db 320 dup (0)
+
+     ErrorMsg db 'Error', 13, 10,'$'
 params BMPKBEZA <> ; assigning the structures to these values
 param  ColoresBmp <>
 datos ENDS
@@ -70,6 +81,12 @@ inicio :
          EncontrarNombre 
          CargarBMP 
 
+         mov	ah,00h   ;Espera a que presione una tecla
+         int	16h
+
+         mov	ah,00h   ; Vuelvo al modo normal
+         mov	al,02h
+         int	10h
 fin:
          RetornaControl
 codigo ENDS

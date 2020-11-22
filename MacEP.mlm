@@ -148,8 +148,8 @@ EndM
 EncontrarNombre Macro 				;Va sacando del ES caracter a caracter el nombre del archivo
     add di,3d                     
     ciclo:
-     	mov 	al, byte ptr es:[si] 		;Mueve el primer caracter al al
-     	cmp 	al,0dh 				;Si es igual a cero es que llegó al final
+     	mov 	al, byte ptr es:[si]               ;Mueve el primer caracter al al		
+     	cmp 	al,0h 				       ;Si es igual a cero es que llegó al final
      	jz 	print				       ;Va a la etiqueta del final
 	mov 	byte ptr nombArch[di],al           ;Si no va a la etiqueta sigue con el ciclo agregando el caracter siguiente
      	inc 	di 					;Incrementa la posición de donde guarda la variable
@@ -349,4 +349,5 @@ bypass:
 	mov al,[si]
 	stosb  ; Es igual a ES:DI,[AL]
 	inc si
+       ret
 endM
