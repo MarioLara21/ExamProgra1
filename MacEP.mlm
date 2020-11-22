@@ -173,68 +173,63 @@ cargarNombre Macro  					;Verifica que el argumento no esté vacío ante de llam
 	hay:
     	 buscarNombre
 EndM
-CerrarArchivo Macro 					;Cierre de un archivo
+CerrarArchivo Macro 					
 	mov		bx,handle
 	mov		ah,3eh 
 	int 	21h
 EndM
-LeerArchivo Macro num , destino			;Lee e imprime la información adentro del archivo de 
-	mov 	ah,3fh 				;ayuda la programa
+LeerArchivo Macro num , destino			
+	mov 	ah,3fh 				
 	mov 	bx,handle
 	mov 	cx,num
 
-	mov 	dx,offset destino				
+	mov 	dx,offset destino		
 	int 	21h
 	xor 	ax,ax
 	mov 	ah,09h
-	mov 	bl,09h 				;Imprime la información con el atributo 09h que es 
-	xor 	bh,bh 					;el color azul
+	mov 	bl,09h 				 
+	xor 	bh,bh 					
 	mov 	cx,200h
 	int 	10h
 	int 	21h
 EndM
 AbrirArch Macro arch
-	local ErrorAbrir,SalirAbrir			;Abre el archivo que tiene la información de ayuda			
- 	mov 	ah,3Dh					;del programa al digitar /?
+	local ErrorAbrir,SalirAbrir				
+ 	mov 	ah,3Dh				
 	mov 	al,02h	
-	mov 	dx,offset arch			
+	mov 	dx,offset arch		
 	int 	21h
 	mov 	handle,ax
-	cmp 	ax,2h 					;Si el ax contiene un 2 significa que el archivo no se
-	jz 		ErrorAbrir 			;encuentra en el BIN y salta a error
-	jmp 	short salirAbrir 			;Si el programa se encuentra se sigue la ejecución normal
+	cmp 	ax,2h 					
+	jz 		ErrorAbrir 		
+	jmp 	short salirAbrir 			
 	ErrorAbrir:
-		ImprimeString msmErrorAbrir,0ch 	;Imprime string con la información del error 
-		CerrarDOS 							;y sale del programa
+		ImprimeString msmErrorAbrir,0ch 	 
+		CerrarDOS 				
 endM
 CargarBMP macro
    mov ah,4fh 
    mov al,10h
    mov bx,101h
    int 10h
-
    mov ah,4fh
    mov al,05h
    mov bh,00h
    mov bl,00h
    mov dx,4
    int 10h
-   
-   mov	ah,3dh   ; file open
+   mov	ah,3dh  
    mov	al,00
    mov	dx,offset nombArch
-   int	21h       ; file open end
-
+   int	21h     
    mov	handle,ax
-
-   mov	ah,3fh   ; file read
+   mov	ah,3fh  
    mov	bx,handle
    mov	cx,54
    mov	dx,offset params
-   int	21h      ; file read end
-
-   mov	col,0  ; reading in the palette
-G1:
+   int	21h     
+   mov	col,0  
+G1:;23
    mov	ah,3fh
    mov	bx,handle
    mov	cx,4
@@ -255,107 +250,90 @@ G1:
    out	dx,al
    cmp	col,255
    inc	col
-   jne	G1        ; palette read ends
-
-   mov	Z,479
-   mov	X,0
+   jne	G1B        
+G1B:;45
+   jmp G1
 A1:
-   mov	ah,3fh   ; file read
+   mov	ah,3fh  
    mov	bx,handle
    mov	cx,640
    mov	dx,offset col
-   int	21h      ; file read end
-
-   ; writing a single pixel to the display in SVGA
-mov	si,offset col
-A2:
-   call  putpixel
+   int	21h     
+   mov	si,offset col
+A2:;54
+   ponerPixel
    inc	X
-   cmp	X,640
-   jne 	A2
-   mov	X,0
+   cmp	X,280h
+   jne A2B
+   mov	X,0h
    dec	Z
    cmp	Z,-1
-   jne	A1
-
+   jne	A1B
    mov	ah,3eh
-   mov	bx,handle
-   int	21h
-endM
-
-putpixel macro  ; this procedure is for putting a single pixel any
-							; where on the display plane
-; The linear address of the display plane is=y*640+x
-   mov	ax,Z ; calculating linear=y*640 in 16-bit
+   mov	bx,offset handle
+   xor 
+A1B:;66
+   jmp A1
+A2B:
+   jmp A2
+endM;70
+ponerPixel macro  
+   mov	ax,Z 
    mul	multi
-   mov	buff,ax   ; first 16-bit calculation
+   mov	buff,ax  
    mov	ax,100
    mul	buff
    mov	buff,ax
    mov	buff+2,dx
-
-   mov	ax,Z    ; secound 16-bit calculation
+   mov	ax,Z   
    mul 	multi+2
    mov	buff+4,ax
    mov	ax,10
    mul	buff+4
    mov	buff+4,ax
    mov	buff+6,dx
-
-   mov	ax,buff ; now adding the two 16-bit values
+   mov	ax,buff 
    add	ax,buff+4
    mov	buff,ax
    mov	ax,buff+2
    adc	ax,buff+6
    mov	buff+2,ax
-
-   mov	ax,X  ; now adding x to the expression
+   mov	ax,X  
    add	buff,ax
-   adc	buff+2,0   ; expression is now lin=y*640+x
-
+   adc	buff+2,0   
    mov	ax,buff
    mov	dx,buff+2
-
-   mov	cx,16       ; calculating bank number
-F1:	sar	dx,1
-		rcr	ax,1
-      loop	F1
-		mov	num,ax
-
-      mov   ax,y    ; testing each of the bank boundaries
-      cmp	ax,Z
-      je		pass
-
-		mov   ax,y+2
-      cmp	ax,Z
-      je		pass
-
+   mov	cx,16       
+F1:   sar   dx,1
+      rcr   ax,1
+      loop  F1
+      mov   num,ax
+      mov   ax,y   
+      cmp   ax,Z
+      je    pass
+      mov   ax,y+2
+      cmp   ax,Z
+      je    pass
       mov   ax,y+4
-      cmp	ax,Z
-      je		pass
-
+      cmp   ax,Z
+      je    pass
       mov   ax,y+6
-      cmp	ax,Z
-      je		pass
-
+      cmp   ax,Z
+      je    pass
       mov   ax,y+8
-      cmp	ax,Z
-      je		pass
-
+      cmp   ax,Z
+      je    pass
       mov   ax,y+10
-      cmp	ax,Z
-      je		pass
-
+      cmp   ax,Z
+      je    pass
       mov   ax,y+12
-      cmp	ax,Z
-      je		pass
-
+      cmp   ax,Z
+      je    pass
       mov   ax,y+14
-      cmp	ax,Z
-
-      jne	bypass
+      cmp   ax,Z
+      jne   bypass
 pass:
-   mov ah,4fh   ; adjusting the bank
+   mov ah,4fh   
 	mov al,05h
 	mov bh,00h
 	mov bl,00h
@@ -364,7 +342,7 @@ pass:
 
 bypass:
 
-	mov ax,0A000h      ;writing a single pixel to the display
+	mov ax,0A000h     
 	mov es,ax
 	mov ax,buff
 	mov di,ax

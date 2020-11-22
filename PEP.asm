@@ -52,6 +52,15 @@ datos SEGMENT
        biclrused   dw   2 dup(?)
        biclrimp    dw   2 dup(?)
     BMPKBEZA   ends
+    ColoresBmp   struc            ; This is how the bitmap stores its colours
+     blue        db   ?
+     green       db   ?
+     red         db   ?
+     fill        db   ?
+    ColoresBmp   ends
+
+params BMPKBEZA <> ; assigning the structures to these values
+param  ColoresBmp <>
 datos ENDS
 include macep.mlm
 codigo SEGMENT
@@ -59,9 +68,8 @@ ASSUME CS:codigo,ds:datos
 inicio :
          IniciarSegDatos datos
          EncontrarNombre 
-         mov	ah,00h   ; Cambia del modo texto al gráfico
-         mov	al,10h
-         int	10h      ; Interrupción que lo hace
+         CargarBMP 
+
 fin:
          RetornaControl
 codigo ENDS
